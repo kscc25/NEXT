@@ -1,0 +1,22 @@
+{
+  "name": "vndotplus",
+  "version": "0.0.0",
+  "authors": [
+    "Sang Hero <heroandtn3@gmail.com>"
+  ],
+  "description": "VNDOT Plus",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/vendors",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "dat.gui": "*",
+    "stats.js": "*",
+    "pixi.js": "~3.0.9"
+  }
+}

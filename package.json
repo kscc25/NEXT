@@ -1,0 +1,25 @@
+{
+  "name": "vndotplus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "agario-client": "^1.1.6",
+    "express": "^4.13.3",
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^4.0.1",
+    "grunt-concurrent": "^2.1.0",
+    "grunt-contrib-clean": "^0.7.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-nodemon": "^0.4.1"
+  },
+  "dependencies": {
+    "bufferutil": "^1.2.1",
+    "utf-8-validate": "^1.2.1"
+  }
+}
