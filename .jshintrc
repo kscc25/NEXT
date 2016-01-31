@@ -1,0 +1,12 @@
+{
+  "globalstrict": true,
+  "browser": true,
+  "node": true,
+  "expr": true,
+  "esnext": true,
+  "globals": {
+    "PIXI": false,
+    "dat": false,
+    "Stats": false
+  }
+}
