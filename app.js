@@ -1,3 +1,5 @@
+'use strict';
+
 window.Client = require('agario-client');
 window.EventEmitter = require('events').EventEmitter;
 
@@ -195,6 +197,22 @@ BallView.prototype = {
     }
 };
 
+class MapSize {
+    constructor(minX, minY, maxX, maxY) {
+        this.minX = minX
+        this.maxX = maxX
+        this.minY = minY
+        this.maxY = maxY
+    }
+    centerX() { return (this.minX + this.maxX) / 2 }
+    centerY() { return (this.minY + this.maxY) / 2 }
+    width() { return this.maxX - this.minX }
+    height() { return this.maxY - this.minY }
+    static default() {
+        const dim = -1000
+        return new MapSize(-dim, dim, -dim, dim)
+    }
+}
 
 function Viewer(client, container) {
     this.client = client;
@@ -204,8 +222,10 @@ function Viewer(client, container) {
 
     this.addRenderer();
     this.addStats();
+    this.mapSize = MapSize.default();
     var _this = this;
     client.once('mapSizeLoad', function (min_x, min_y, max_x, max_y) {
+        _this.mapSize = new MapSize(min_x, min_y, max_x, max_y);
         _this.gameWidth = max_x;
         _this.gameHeight = max_y;
         _this.initStage();
@@ -245,8 +265,8 @@ Viewer.prototype = {
     initStage: function () {
         this.stage = new PIXI.Container();
         this.cam = {
-            x: new AnimatedValue(this.gameWidth / 2),
-            y: new AnimatedValue(this.gameHeight / 2),
+            x: new AnimatedValue(this.mapSize.centerX()),
+            y: new AnimatedValue(this.mapSize.centerY()),
             s: new AnimatedValue(this.defaultScale())
         };
         this.d = {};
@@ -267,7 +287,8 @@ Viewer.prototype = {
     addBorders: function () {
         this.borders = new PIXI.Graphics();
         this.borders.lineStyle(5, 0xFF3300, 1);
-        this.borders.drawRect(0, 0, this.gameWidth, this.gameHeight);
+        let s = this.mapSize;
+        this.borders.drawRect(s.minX, s.minY, s.width(), s.height());
         this.stage.addChild(this.borders);
     },
     addStats: function () {
@@ -463,14 +484,14 @@ function Controller(client) {
 Controller.prototype = {
     findServer: function () {
         // Because of SOP, this will never work
-        x = new XMLHttpRequest();
+        let x = new XMLHttpRequest();
         x.open('POST', 'http://m.agar.io', false);
         x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         //x.setRequestHeader('Content-Length', this.server.region.length);
         // x.setRequestHeader('Origin', 'http://agar.io');
         // x.setRequestHeader('Referer', 'http://agar.io/');
         x.send(this.server.region);
-        s = x.responseText.split('\n');
+        let s = x.responseText.split('\n');
         console.log(s);
         this.server.ip = s[0].split(':')[0];
         this.server.port = s[0].split(':')[1];
