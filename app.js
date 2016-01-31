@@ -1,3 +1,5 @@
+'use strict';
+
 window.Client = require('agario-client');
 window.EventEmitter = require('events').EventEmitter;
 
@@ -463,14 +465,14 @@ function Controller(client) {
 Controller.prototype = {
     findServer: function () {
         // Because of SOP, this will never work
-        x = new XMLHttpRequest();
+        let x = new XMLHttpRequest();
         x.open('POST', 'http://m.agar.io', false);
         x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         //x.setRequestHeader('Content-Length', this.server.region.length);
         // x.setRequestHeader('Origin', 'http://agar.io');
         // x.setRequestHeader('Referer', 'http://agar.io/');
         x.send(this.server.region);
-        s = x.responseText.split('\n');
+        let s = x.responseText.split('\n');
         console.log(s);
         this.server.ip = s[0].split(':')[0];
         this.server.port = s[0].split(':')[1];
