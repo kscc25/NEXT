@@ -2,7 +2,10 @@
 
 /* global performance: false */
 
-var Client = require('agario-client');
+var PIXI = require('pixi.js');
+var Stats = require('stats.js');
+var Dat = require('dat-gui');
+var Client = require('heroandtn3/agario-client');
 var EventEmitter = require('events').EventEmitter;
 
 function AnimatedValue(value) {
@@ -425,7 +428,7 @@ function Controller(client) {
   this.nick = 'agario-client';
   this.autoRespawn = false;
 
-  this.gui = new dat.GUI();
+  this.gui = new Dat.GUI();
 
   this.servgui = this.gui.addFolder('Server');
   this.servgui.add(this.server, 'region', ['US-Fremont', 'US-Atlanta', 'BR-Brazil', 'EU-London', 'RU-Russia', 'JP-Tokyo', 'CN-China', 'SG-Singapore', 'TK-Turkey']);
