@@ -2,9 +2,10 @@
 NEXT - Agar.io Extension
 
 ## Installation
-- npm install
-- jspm install
-- install userscript
+- Run `$ npm install`
+- Run `$ jspm install`
+- Install the userscript `userscripts/next.chrome.js`
 
 ## Run
-- gulp launch
+- Run `gulp dev`
+- Go to `agar.io`

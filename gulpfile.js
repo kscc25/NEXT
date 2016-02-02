@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp        = require('gulp');
 var cssMin      = require('gulp-cssnano');
 var htmlMin     = require('gulp-htmlmin');
@@ -50,7 +52,6 @@ gulp.task('watch', function () {
   gulp.watch('client/index.html', ['html']);
 });
 
-gulp.task('launch', function() {
+gulp.task('dev', function() {
   runSeq('build', 'server', 'watch');
 });
-
