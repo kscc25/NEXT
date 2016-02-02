@@ -8,6 +8,7 @@ var Dat = require('dat-gui');
 var Client = require('heroandtn3/agario-client');
 var EventEmitter = require('events').EventEmitter;
 var Misc = require('./misc');
+var constants = require('./constants');
 
 function AnimatedValue(value) {
   this.write(value);
@@ -435,7 +436,7 @@ function Controller(client) {
     ip: '127.0.0.1',
     port: 9158
   };
-  this.nick = 'agario-client';
+  this.nick = constants.DEFAULT_NICKNAME;
   this.autoRespawn = false;
 
   this.gui = new Dat.GUI();
