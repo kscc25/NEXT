@@ -8,6 +8,7 @@ var Dat = require('dat-gui');
 var Client = require('heroandtn3/agario-client');
 var EventEmitter = require('events').EventEmitter;
 var Misc = require('./misc');
+var Connector = require('./connector');
 var constants = require('./constants');
 
 function AnimatedValue(value) {
@@ -430,11 +431,12 @@ Pointer.prototype = {
 
 function Controller(client) {
   this.client = client;
+  this.connector = new Connector();
 
   this.server = {
     region: 'EU-London',
-    ip: '127.0.0.1',
-    port: 9158
+    ws: '127.0.0.1:9158',
+    token: '',
   };
   this.nick = constants.DEFAULT_NICKNAME;
   this.autoRespawn = false;
@@ -442,12 +444,19 @@ function Controller(client) {
   this.gui = new Dat.GUI();
 
   this.servgui = this.gui.addFolder('Server');
+
   this.servgui.add(this.server, 'region', ['US-Fremont', 'US-Atlanta', 'BR-Brazil', 'EU-London', 'RU-Russia', 'JP-Tokyo', 'CN-China', 'SG-Singapore', 'TK-Turkey']);
-  this.servgui.add(this, 'findServer');
-  this.servgui.add(this.server, 'ip');
-  this.servgui.add(this.server, 'port');
-  this.servgui.add(this, 'connect');
+  this.servgui.add(this, 'findFfa');
+  this.servgui.add(this, 'findParty');
+
+  this.servgui.add(this.server, 'token');
+  this.servgui.add(this, 'connectParty');
+
+  this.servgui.add(this.server, 'ws');
+  this.servgui.add(this, 'directConnect');
+
   this.servgui.add(this, 'disconnect');
+
   this.servgui.open();
 
   this.cellgui = this.gui.addFolder('Cell');
@@ -495,33 +504,31 @@ function Controller(client) {
       }
     }
   });
+  this.connector.onconnect = (...args) => this.connect(...args);
 }
 
 Controller.prototype = {
-  findServer: function () {
-    // Because of SOP, this will never work
-    let x = new XMLHttpRequest();
-    x.open('POST', 'http://m.agar.io', false);
-    x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    //x.setRequestHeader('Content-Length', this.server.region.length);
-    // x.setRequestHeader('Origin', 'http://agar.io');
-    // x.setRequestHeader('Referer', 'http://agar.io/');
-    x.send(this.server.region);
-    let s = x.responseText.split('\n');
-    console.log(s);
-    this.server.ip = s[0].split(':')[0];
-    this.server.port = s[0].split(':')[1];
-    this.server.key = s[1];
-
-    for (var i in this.servgui.__controllers) {
-      this.servgui.__controllers[i].updateDisplay();
-    }
+  findFfa() {
+    this.connector.findFfa(this.server.region);
   },
-  connect: function () {
-    this.client.connect('ws://' + this.server.ip + ':' + this.server.port, this.server.key);
+  findParty() {
+    this.connector.findParty(this.server.region);
   },
-  disconnect: function () {
+  connectParty() {
+    this.connector.connectParty(this.server.token);
+  },
+  directConnect() {
+    this.connector.directConnect(this.server.ws, this.server.token);
+  },
+  disconnect() {
     this.client.disconnect();
+  },
+  connect(ws, token) {
+    this.server.ws = ws;
+    this.server.token = token;
+    for (var i in this.servgui.__controllers)
+      this.servgui.__controllers[i].updateDisplay();
+    this.client.connect("ws://" + ws, token);
   },
   spawn: function () {
     this.client.spawn(this.nick);
@@ -530,7 +537,7 @@ Controller.prototype = {
     for (var i = 1; i <= 10; i++) {
       this.leaders[i] = '---';
     }
-  }
+  },
 };
 
 function IA(client) {
