@@ -11,41 +11,41 @@ var stylish     = require('jshint-stylish');
 var jscs        = require('gulp-jscs');
 var browserSync = require('browser-sync').create();
 
-gulp.task('css', function() {
+gulp.task('css', function () {
   gulp.src(['client/css/layout.css'])
     .pipe(cssMin())
-    .pipe(rename({suffix: '.bundle'}))
+    .pipe(rename({ suffix: '.bundle' }))
     .pipe(gulp.dest('build/css/'));
 });
 
-gulp.task('html', function() {
+gulp.task('html', function () {
   gulp.src(['client/index.html'])
-    .pipe(htmlMin({collapseWhitespace: true}))
+    .pipe(htmlMin({ collapseWhitespace: true }))
     .pipe(gulp.dest('build/'));
 });
 
-gulp.task('js', function() {
+gulp.task('js', function () {
   gulp.src(['client/js/main.js'])
-    .pipe(jspm({selfExecutingBundle: true}))
+    .pipe(jspm({ selfExecutingBundle: true }))
     .pipe(gulp.dest('build/js/'));
 });
 
-gulp.task('server', function() {
+gulp.task('server', function () {
   browserSync.init({
     port: 8080,
     notify: false,
     open: false,
     server: {
-      baseDir: "./build",
+      baseDir: './build',
       middleware: function (req, res, next) {
         res.setHeader('Access-Control-Allow-Origin', '*');
         next();
-      }
-    }
+      },
+    },
   });
 });
 
-gulp.task('build', function() {
+gulp.task('build', function () {
   runSeq(['css', 'html', 'js']);
 });
 
@@ -55,23 +55,23 @@ gulp.task('watch', function () {
   gulp.watch('client/index.html', ['html']);
 });
 
-gulp.task('dev', function() {
+gulp.task('dev', function () {
   runSeq('build', 'server', 'watch');
 });
 
-gulp.task('jshint', function() {
-  return gulp.src('./client/js/*.js')
+gulp.task('jshint', function () {
+  return gulp.src(['./client/js/*.js', './gulpfile.js'])
     .pipe(jshint())
     .pipe(jshint.reporter(stylish))
     .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('jscs', function() {
-  return gulp.src('./client/js/*.js')
+gulp.task('jscs', function () {
+  return gulp.src(['./client/js/*.js', './gulpfile.js'])
     .pipe(jscs())
     .pipe(jscs.reporter());
 });
 
-gulp.task('lint', function() {
+gulp.task('lint', function () {
   runSeq('jshint', 'jscs');
 });
