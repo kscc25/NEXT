@@ -18,17 +18,17 @@ function Viewer(client, container) {
   this.addStats();
   this.mapSize = MapSize.default();
   var _this = this;
-  client.once('mapSizeLoad', function (min_x, min_y, max_x, max_y) {
-    _this.mapSize = new MapSize(min_x, min_y, max_x, max_y);
-    _this.gameWidth = max_x;
-    _this.gameHeight = max_y;
+  client.once('mapSizeLoad', function (minX, minY, maxX, maxY) {
+    _this.mapSize = new MapSize(minX, minY, maxX, maxY);
+    _this.gameWidth = maxX;
+    _this.gameHeight = maxY;
     _this.zoom = 0;
     _this.initStage();
     _this.addListners();
     _this.addBorders();
     _this.animate();
     _this.homeview = true;
-    client.once('myNewBall', function() {
+    client.once('myNewBall', function () {
       _this.homeview = false;
     });
     _this.emit('launched');
@@ -47,7 +47,7 @@ Viewer.prototype = {
   addRenderer: function () {
     this.getSize();
     this.renderer = PIXI.autoDetectRenderer(this.width, this.height, {
-      antialias: true
+      antialias: true,
     });
     this.container.appendChild(this.renderer.view);
   },
@@ -58,7 +58,7 @@ Viewer.prototype = {
   defaultScale: function () {
     return Math.max(this.width / 1920, this.height / 1080);
   },
-  modifyZoom: function(amount) {
+  modifyZoom: function (amount) {
     this.zoom -= Math.sign(amount) * 0.25;
     this.zoom = Misc.ensureRange(this.zoom, -5, 1.5);
   },
@@ -79,7 +79,7 @@ Viewer.prototype = {
     this.client.on('ballAppear', function (id) {
       if (!_this.balls[id]) {
         _this.balls[id] = new BallView(_this, this.balls[id]);
-      } else {}
+      }
     });
     this.client.on('ballDestroy', function (id) {
       delete this.balls[id];
@@ -109,8 +109,8 @@ Viewer.prototype = {
     keys.sort(function (a, b) {
       return _this.balls[a].ball.size - _this.balls[b].ball.size;
     });
-    for (var key_offset in keys) {
-      var ball = this.balls[keys[key_offset]];
+    for (var keyOffset in keys) {
+      var ball = this.balls[keys[keyOffset]];
       if (ball.ball.size >= at) {
         ball.container.bringToFront();
       }
@@ -119,8 +119,8 @@ Viewer.prototype = {
   posCamera: function () {
     var x, y, p;
     x = y = p = 0;
-    for (var ball_id in this.client.my_balls) {
-      var ball = this.client.balls[this.client.my_balls[ball_id]];
+    for (var ballId in this.client.my_balls) {
+      var ball = this.client.balls[this.client.my_balls[ballId]];
       if (!ball.visible) continue;
       x += ball.x * ball.size;
       y += ball.y * ball.size;
@@ -136,8 +136,8 @@ Viewer.prototype = {
     this.cam.z.set(this.zoom, 100);
   },
   render: function () {
-    for (var ball_id in this.client.balls) {
-      var ball = this.balls[ball_id];
+    for (var ballId in this.client.balls) {
+      var ball = this.balls[ballId];
       if (ball) {
         ball.render();
       }
@@ -158,7 +158,7 @@ Viewer.prototype = {
     requestAnimationFrame(function () {
       _this.animate();
     });
-  }
+  },
 };
 
 // Inherit from EventEmitter
