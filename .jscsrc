@@ -1,0 +1,7 @@
+{
+  "preset": "airbnb",
+  "esnext": true,
+  "requirePaddingNewLinesAfterBlocks": false,
+  "disallowMultipleVarDecl": false,
+  "requireCamelCaseOrUpperCaseIdentifiers": { "ignoreProperties": true }
+}
