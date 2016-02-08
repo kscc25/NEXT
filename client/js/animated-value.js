@@ -1,14 +1,14 @@
 'use strict';
 
-function AnimatedValue(value) {
-  this.write(value);
-}
+class AnimatedValue {
+  constructor(value) {
+    this.write(value);
+  }
 
-AnimatedValue.prototype = {
-  get: function () {
+  get() {
     if (this.timeout) {
-      var now = performance.now();
-      var end = this.frTime + this.timeout;
+      const now = performance.now();
+      const end = this.frTime + this.timeout;
       if (now >= end) {
         this.timeout = 0;
         return this.toVal;
@@ -21,8 +21,9 @@ AnimatedValue.prototype = {
     } else {
       return this.toVal;
     }
-  },
-  set: function (value, timeout) {
+  }
+
+  set(value, timeout) {
     if (value != this.toVal) {
       this.frVal = this.get();
       this.toVal = value;
@@ -30,19 +31,21 @@ AnimatedValue.prototype = {
       this.following = undefined;
       this.frTime = performance.now();
     }
-  },
-  follow: function (following, timeout) {
+  }
+
+  follow(following, timeout) {
     this.frVal = this.get();
     this.following = following;
     this.timeout = timeout;
     this.frTime = performance.now();
-  },
-  write: function (value) {
+  }
+
+  write(value) {
     this.frVal = value;
     this.toVal = value;
     this.timeout = 0;
     this.frTime = performance.now(); // so end == now
-  },
-};
+  }
+}
 
 module.exports = AnimatedValue;

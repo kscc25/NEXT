@@ -1,59 +1,48 @@
 'use strict';
 
-var PIXI = require('pixi.js');
-var AnimatedValue = require('./animated-value');
+const PIXI = require('pixi.js');
+const AnimatedValue = require('./animated-value');
 
-function BallView(main, ball) {
-  this.main = main;
-  this.ball = ball;
-  this.container = new PIXI.Container();
-  this.graphic = new PIXI.Graphics();
-  this.container.addChild(this.graphic);
+class BallView {
+  constructor(main, ball) {
+    this.main = main;
+    this.ball = ball;
+    this.container = new PIXI.Container();
+    this.graphic = new PIXI.Graphics();
+    this.container.addChild(this.graphic);
 
-  this.x = new AnimatedValue(0);
-  this.y = new AnimatedValue(0);
-  this.s = new AnimatedValue(0);
+    this.x = new AnimatedValue(0);
+    this.y = new AnimatedValue(0);
+    this.s = new AnimatedValue(0);
 
-  var _this = this;
-  this.appear();
-  this.ball.on('appear', function () {
-    _this.appear();
-  });
-  this.ball.on('destroy', function (reason) {
-    if (reason.reason == 'eaten') {
-      var eater = _this.main.balls[reason.by];
-      if (eater && eater.ball.id != _this.ball.id) {
-        _this.x.follow(function () {
-          return eater.x.get();
-        }, 100);
-        _this.y.follow(function () {
-          return eater.y.get();
-        }, 100);
-        setTimeout(function () {
-          _this.disappear();
-        }, 50);
+    this.appear();
+    this.ball.on('appear', () => this.appear());
+    this.ball.on('destroy', reason => {
+      if (reason.reason == 'eaten') {
+        const eater = this.main.balls[reason.by];
+        if (eater && eater.ball.id != this.ball.id) {
+          this.x.follow(() => eater.x.get(), 100);
+          this.y.follow(() => eater.y.get(), 100);
+          setTimeout(() => this.disappear(), 50);
+        } else {
+          this.disappear();
+        }
       } else {
-        _this.disappear();
+        this.disappear();
       }
-    } else {
-      _this.disappear();
-    }
-  });
-  this.ball.on('disappear', function () {
-    _this.disappear();
-  });
-  this.ball.on('move', function (oldX, oldY, newX, newY) {
-    _this.x.set(newX, 100);
-    _this.y.set(newY, 100);
-  });
-  this.ball.on('resize', function (oldSize, newSize) {
-    _this.s.set(newSize, 100);
-    _this.main.zSort(newSize);
-  });
-}
+    });
+    this.ball.on('disappear', () => this.disappear());
+    this.ball.on('move', (oldX, oldY, newX, newY) => {
+      this.x.set(newX, 100);
+      this.y.set(newY, 100);
+    });
+    this.ball.on('resize', (oldSize, newSize) => {
+      this.s.set(newSize, 100);
+      this.main.zSort(newSize);
+    });
+  }
 
-BallView.prototype = {
-  appear: function () {
+  appear() {
     this.x.write(this.ball.x);
     this.y.write(this.ball.y);
     this.s.set(this.ball.size, 100);
@@ -62,21 +51,21 @@ BallView.prototype = {
     this.setMass();
     this.main.zSort(this.ball.size);
     this.main.stage.addChild(this.container);
-  },
-  disappear: function () {
+  }
+
+  disappear() {
     this.s.set(0, 100);
-    var _this = this;
-    setTimeout(function () {
-      _this.main.stage.removeChild(_this.container);
-    }, 100);
-  },
-  shape: function () {
+    setTimeout(() => this.main.stage.removeChild(this.container), 100);
+  }
+
+  shape() {
     this.graphic.clear();
     this.graphic.beginFill(this.ball.virus ? 0x005500 : this.ball.color.replace('#', '0x'), 1);
     this.graphic.drawCircle(0, 0, 1);
     this.graphic.endFill();
-  },
-  setName: function () {
+  }
+
+  setName() {
     if (this.ball.name) {
       if (!this.name) {
         this.name = new PIXI.Text(this.ball.name, {
@@ -85,10 +74,7 @@ BallView.prototype = {
           stroke: 0x000000,
           strokeThickness: 5,
         });
-        var _this = this;
-        this.ball.on('rename', function () {
-          _this.updateName();
-        });
+        this.ball.on('rename', () => this.updateName());
       }
       this.updateName();
       this.container.addChild(this.name);
@@ -99,14 +85,16 @@ BallView.prototype = {
         delete this.text;
       }
     }
-  },
-  updateName: function () {
+  }
+
+  updateName() {
     this.name.resolution = 10;
     this.name.scale.x = this.name.scale.y *= 2 * 0.9 / this.name.width;
     this.name.position.x = -this.name.width / 2;
     this.name.position.y = -this.name.height / 2;
-  },
-  setMass: function () {
+  }
+
+  setMass() {
     if (this.ball.mine) {
       if (!this.mass) {
         this.mass = new PIXI.Text(this.ball.size, {
@@ -115,10 +103,7 @@ BallView.prototype = {
           stroke: 0x000000,
           strokeThickness: 5,
         });
-        var _this = this;
-        this.ball.on('resize', function () {
-          _this.updateMass();
-        });
+        this.ball.on('resize', () => { this.updateMass(); });
       }
       this.updateMass();
       this.container.addChild(this.mass);
@@ -129,19 +114,21 @@ BallView.prototype = {
         delete this.mass;
       }
     }
-  },
-  updateMass: function () {
+  }
+
+  updateMass() {
     this.mass.text = this.ball.size;
     this.mass.resolution = 10;
     this.mass.scale.x = this.mass.scale.y *= 0.5 / this.mass.width;
     this.mass.position.x = -this.mass.width / 2;
     this.mass.position.y = this.name ? this.name.height / 2 : 0;
-  },
-  render: function () {
+  }
+
+  render() {
     this.container.position.x = this.x.get();
     this.container.position.y = this.y.get();
     this.container.scale.x = this.container.scale.y = this.s.get();
-  },
-};
+  }
+}
 
 module.exports = BallView;
