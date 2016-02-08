@@ -7,8 +7,8 @@ function AnimatedValue(value) {
 AnimatedValue.prototype = {
   get: function () {
     if (this.timeout) {
-      var now = performance.now(),
-      end = this.frTime + this.timeout;
+      var now = performance.now();
+      var end = this.frTime + this.timeout;
       if (now >= end) {
         this.timeout = 0;
         return this.toVal;
@@ -42,7 +42,7 @@ AnimatedValue.prototype = {
     this.toVal = value;
     this.timeout = 0;
     this.frTime = performance.now(); // so end == now
-  }
+  },
 };
 
 module.exports = AnimatedValue;

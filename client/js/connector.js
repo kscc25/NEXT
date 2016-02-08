@@ -4,17 +4,17 @@ class Connector {
   constructor() {
     this.onconnect = () => {};
     this.onerror = () => {};
-    let self = this;
+    let _this = this;
     this.callbacks = {
-      connect(ws, token) { self.onconnect(ws, token); },
-      error() { self.onerror(); },
+      connect(ws, token) { _this.onconnect(ws, token); },
+      error() { _this.onerror(); },
     };
   }
   findFfa(region) {
     findByRegion(region, this.callbacks);
   }
   findParty(region) {
-    this.findFfa(region + ":party");
+    this.findFfa(region + ':party');
   }
   connectParty(token) {
     findByPartyToken(token, this.callbacks);
@@ -30,7 +30,7 @@ function findByRegion(region, callbacks) {
   req.send(region);
   req.addEventListener('load', () => {
     if (req.status == 200) {
-      let s = req.responseText.split("\n");
+      let s = req.responseText.split('\n');
       if (s[0] === '0.0.0.0:0')
         callbacks.error();
       else
@@ -46,7 +46,7 @@ function findByPartyToken(partyToken, callbacks) {
   req.send(partyToken);
   req.addEventListener('load', () => {
     if (req.status === 200)
-      callbacks.connect(req.responseText.split("\n")[0],
+      callbacks.connect(req.responseText.split('\n')[0],
                  partyToken);
     else
       callbacks.error();

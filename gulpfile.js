@@ -5,7 +5,10 @@ var cssMin      = require('gulp-cssnano');
 var htmlMin     = require('gulp-htmlmin');
 var rename      = require('gulp-rename');
 var jspm        = require('gulp-jspm');
+var jshint      = require('gulp-jshint');
 var runSeq      = require('run-sequence');
+var stylish     = require('jshint-stylish');
+var jscs        = require('gulp-jscs');
 var browserSync = require('browser-sync').create();
 
 gulp.task('css', function() {
@@ -54,4 +57,21 @@ gulp.task('watch', function () {
 
 gulp.task('dev', function() {
   runSeq('build', 'server', 'watch');
+});
+
+gulp.task('jshint', function() {
+  return gulp.src('./client/js/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter(stylish))
+    .pipe(jshint.reporter('fail'));
+});
+
+gulp.task('jscs', function() {
+  return gulp.src('./client/js/*.js')
+    .pipe(jscs())
+    .pipe(jscs.reporter());
+});
+
+gulp.task('lint', function() {
+  runSeq('jshint', 'jscs');
 });

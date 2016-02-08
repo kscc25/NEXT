@@ -42,13 +42,13 @@ function BallView(main, ball) {
   this.ball.on('disappear', function () {
     _this.disappear();
   });
-  this.ball.on('move', function (old_x, old_y, new_x, new_y) {
-    _this.x.set(new_x, 100);
-    _this.y.set(new_y, 100);
+  this.ball.on('move', function (oldX, oldY, newX, newY) {
+    _this.x.set(newX, 100);
+    _this.y.set(newY, 100);
   });
-  this.ball.on('resize', function (old_size, new_size) {
-    _this.s.set(new_size, 100);
-    _this.main.zSort(new_size);
+  this.ball.on('resize', function (oldSize, newSize) {
+    _this.s.set(newSize, 100);
+    _this.main.zSort(newSize);
   });
 }
 
@@ -83,7 +83,7 @@ BallView.prototype = {
           font: 'bold 20pt Arial',
           fill: 0xFFFFFF,
           stroke: 0x000000,
-          strokeThickness: 5
+          strokeThickness: 5,
         });
         var _this = this;
         this.ball.on('rename', function () {
@@ -113,7 +113,7 @@ BallView.prototype = {
           font: 'bold 20pt Arial',
           fill: 0xFFFFFF,
           stroke: 0x000000,
-          strokeThickness: 5
+          strokeThickness: 5,
         });
         var _this = this;
         this.ball.on('resize', function () {
@@ -141,7 +141,7 @@ BallView.prototype = {
     this.container.position.x = this.x.get();
     this.container.position.y = this.y.get();
     this.container.scale.x = this.container.scale.y = this.s.get();
-  }
+  },
 };
 
 module.exports = BallView;

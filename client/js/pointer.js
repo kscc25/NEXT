@@ -5,7 +5,7 @@ function Pointer(viewer) {
   this.client = this.viewer.client;
   this.dest = { // Destination, relative to camera center
     x: 0,
-    y: 0
+    y: 0,
   };
   var _this = this;
   this.viewer.once('launched', function () {
@@ -37,16 +37,16 @@ Pointer.prototype = {
     var gamePos = e.data.getLocalPosition(this.viewer.stage);
     this.dest = {
       x: gamePos.x - this.viewer.cam.x.get(),
-      y: gamePos.y - this.viewer.cam.y.get()
+      y: gamePos.y - this.viewer.cam.y.get(),
     };
     if (Math.abs(this.dest.x) < 10 && Math.abs(this.dest.y) < 10) {
       this.dest = {
         x: 0,
-        y: 0
+        y: 0,
       };
     }
     this.move();
-  }
+  },
 };
 
 module.exports = Pointer;

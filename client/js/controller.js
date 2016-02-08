@@ -103,7 +103,7 @@ Controller.prototype = {
     this.server.token = token;
     for (var i in this.servgui.__controllers)
       this.servgui.__controllers[i].updateDisplay();
-    this.client.connect("ws://" + ws, token);
+    this.client.connect('ws://' + ws, token);
   },
   spawn: function () {
     this.client.spawn(this.nick);
