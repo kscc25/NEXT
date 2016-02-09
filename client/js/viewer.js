@@ -1,68 +1,69 @@
 'use strict';
 
-var MapSize = require('./map-size');
-var PIXI = require('pixi.js');
-var AnimatedValue = require('./animated-value');
-var BallView = require('./ball-view');
-var Misc = require('./misc');
-var Stats = require('stats.js');
-var EventEmitter = require('events').EventEmitter;
+const MapSize = require('./map-size');
+const PIXI = require('pixi.js');
+const AnimatedValue = require('./animated-value');
+const BallView = require('./ball-view');
+const Misc = require('./misc');
+const Stats = require('stats.js');
+const EventEmitter = require('events').EventEmitter;
 
-function Viewer(client, container) {
-  this.client = client;
-  this.container = container;
+class Viewer extends EventEmitter {
+  constructor(client, container) {
+    super();
+    this.client = client;
+    this.container = container;
 
-  this.balls = {};
+    this.balls = {};
 
-  this.addRenderer();
-  this.addStats();
-  this.mapSize = MapSize.default();
-  var _this = this;
-  client.once('mapSizeLoad', function (minX, minY, maxX, maxY) {
-    _this.mapSize = new MapSize(minX, minY, maxX, maxY);
-    _this.gameWidth = maxX;
-    _this.gameHeight = maxY;
-    _this.zoom = 0;
-    _this.initStage();
-    _this.addListners();
-    _this.addBorders();
-    _this.animate();
-    _this.homeview = true;
-    client.once('myNewBall', function () {
-      _this.homeview = false;
+    this.addRenderer();
+    this.addStats();
+    this.mapSize = MapSize.default();
+    client.once('mapSizeLoad', (minX, minY, maxX, maxY) => {
+      this.mapSize = new MapSize(minX, minY, maxX, maxY);
+      this.gameWidth = maxX;
+      this.gameHeight = maxY;
+      this.zoom = 0;
+      this.initStage();
+      this.addListners();
+      this.addBorders();
+      this.animate();
+      this.homeview = true;
+      client.once('myNewBall', () => this.homeview = false);
+      this.emit('launched');
     });
-    _this.emit('launched');
-  });
-  window.addEventListener('resize', function () {
-    _this.updateSize();
-  });
-  window.addEventListener('wheel', e => _this.modifyZoom(e.deltaY));
-}
+    window.addEventListener('resize', () => this.updateSize());
+    window.addEventListener('wheel', e => this.modifyZoom(e.deltaY));
+  }
 
-Viewer.prototype = {
-  getSize: function () {
+  getSize() {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
-  },
-  addRenderer: function () {
+  }
+
+  addRenderer() {
     this.getSize();
     this.renderer = PIXI.autoDetectRenderer(this.width, this.height, {
       antialias: true,
     });
     this.container.appendChild(this.renderer.view);
-  },
-  updateSize: function () {
+  }
+
+  updateSize() {
     this.getSize();
     this.renderer.resize(this.width, this.height);
-  },
-  defaultScale: function () {
+  }
+
+  defaultScale() {
     return Math.max(this.width / 1920, this.height / 1080);
-  },
-  modifyZoom: function (amount) {
+  }
+
+  modifyZoom(amount) {
     this.zoom -= Math.sign(amount) * 0.25;
     this.zoom = Misc.ensureRange(this.zoom, -5, 1.5);
-  },
-  initStage: function () {
+  }
+
+  initStage() {
     this.stage = new PIXI.Container();
     this.cam = {
       x: new AnimatedValue(this.mapSize.centerX()),
@@ -73,54 +74,53 @@ Viewer.prototype = {
     this.d = {};
     this.dg = new PIXI.Graphics();
     this.stage.addChild(this.dg);
-  },
-  addListners: function () {
-    var _this = this;
-    this.client.on('ballAppear', function (id) {
-      if (!_this.balls[id]) {
-        _this.balls[id] = new BallView(_this, this.balls[id]);
+  }
+
+  addListners() {
+    this.client.on('ballAppear', id => {
+      if (!this.balls[id]) {
+        this.balls[id] = new BallView(this, this.client.balls[id]);
       }
     });
-    this.client.on('ballDestroy', function (id) {
-      delete this.balls[id];
-    });
-  },
-  addBorders: function () {
+    this.client.on('ballDestroy', id => delete this.client.balls[id]);
+  }
+
+  addBorders() {
     this.borders = new PIXI.Graphics();
     this.borders.lineStyle(5, 0xFF3300, 1);
-    let s = this.mapSize;
+    const s = this.mapSize;
     this.borders.drawRect(s.minX, s.minY, s.width(), s.height());
     this.stage.addChild(this.borders);
-  },
-  addStats: function () {
+  }
+
+  addStats() {
     this.stats = new Stats();
     this.stats.setMode(1);
     this.stats.domElement.style.position = 'absolute';
     this.stats.domElement.style.left = '0px';
     this.stats.domElement.style.top = '0px';
     document.body.appendChild(this.stats.domElement);
-  },
-  zSort: function (at) {
+  }
+
+  zSort(at) {
     if (!at) {
       at = 0;
     }
-    var keys = Object.keys(this.balls);
-    var _this = this;
-    keys.sort(function (a, b) {
-      return _this.balls[a].ball.size - _this.balls[b].ball.size;
-    });
-    for (var keyOffset in keys) {
-      var ball = this.balls[keys[keyOffset]];
+    const keys = Object.keys(this.balls);
+    keys.sort((a, b) => this.balls[a].ball.size - this.balls[b].ball.size);
+    for (const keyOffset in keys) {
+      const ball = this.balls[keys[keyOffset]];
       if (ball.ball.size >= at) {
         ball.container.bringToFront();
       }
     }
-  },
-  posCamera: function () {
-    var x, y, p;
+  }
+
+  posCamera() {
+    let x, y, p;
     x = y = p = 0;
-    for (var ballId in this.client.my_balls) {
-      var ball = this.client.balls[this.client.my_balls[ballId]];
+    for (const ballId in this.client.my_balls) {
+      const ball = this.client.balls[this.client.my_balls[ballId]];
       if (!ball.visible) continue;
       x += ball.x * ball.size;
       y += ball.y * ball.size;
@@ -134,16 +134,18 @@ Viewer.prototype = {
       this.cam.s.write(this.defaultScale());
     } // else: don't move the camera
     this.cam.z.set(this.zoom, 100);
-  },
-  render: function () {
-    for (var ballId in this.client.balls) {
-      var ball = this.balls[ballId];
+  }
+
+  render() {
+    for (const ballId in this.client.balls) {
+      const ball = this.balls[ballId];
       if (ball) {
         ball.render();
       }
     }
-  },
-  animate: function () {
+  }
+
+  animate() {
     this.stats.begin();
     this.render();
     this.posCamera();
@@ -154,16 +156,8 @@ Viewer.prototype = {
     this.renderer.render(this.stage);
     this.stats.end();
     this.emit('animate');
-    var _this = this;
-    requestAnimationFrame(function () {
-      _this.animate();
-    });
-  },
-};
-
-// Inherit from EventEmitter
-for (var key in EventEmitter.prototype) {
-  Viewer.prototype[key] = EventEmitter.prototype[key];
+    requestAnimationFrame(() => this.animate());
+  }
 }
 
 module.exports = Viewer;
