@@ -1,4 +1,7 @@
+[![Build Status](https://travis-ci.org/SNSA/NEXT.svg?branch=master)](https://travis-ci.org/SNSA/NEXT)
+
 # NEXT
+
 NEXT - Agar.io Extension
 
 ## Installation
