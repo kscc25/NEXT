@@ -23,7 +23,10 @@ class BallView {
         if (eater && eater.ball.id != this.ball.id) {
           this.x.follow(() => eater.x.get(), 100);
           this.y.follow(() => eater.y.get(), 100);
-          setTimeout(() => this.disappear(), 50);
+          setTimeout(() => {
+            this.disappear();
+            delete this.main.balls[this.ball.id];
+          }, 50);
         } else {
           this.disappear();
         }
