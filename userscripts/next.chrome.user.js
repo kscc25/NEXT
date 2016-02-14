@@ -5,6 +5,8 @@
 // @author       NEXT
 // @match        http://agar.io/*
 // @match        https://agar.io/*
+// @downloadURL  http://snsa.github.io/NEXT/next.chrome.user.js
+// @updateURL    http://snsa.github.io/NEXT/next.chrome.user.js
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
