@@ -7,7 +7,7 @@ class AnimatedValue {
 
   get() {
     if (this.timeout) {
-      const now = performance.now();
+      const now = Date.now();
       const end = this.frTime + this.timeout;
       if (now >= end) {
         this.timeout = 0;
@@ -29,7 +29,7 @@ class AnimatedValue {
       this.toVal = value;
       this.timeout = timeout;
       this.following = undefined;
-      this.frTime = performance.now();
+      this.frTime = Date.now();
     }
   }
 
@@ -37,14 +37,14 @@ class AnimatedValue {
     this.frVal = this.get();
     this.following = following;
     this.timeout = timeout;
-    this.frTime = performance.now();
+    this.frTime = Date.now();
   }
 
   write(value) {
     this.frVal = value;
     this.toVal = value;
     this.timeout = 0;
-    this.frTime = performance.now(); // so end == now
+    this.frTime = Date.now(); // so end == now
   }
 }
 
