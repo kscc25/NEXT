@@ -20,6 +20,7 @@ before_script:
 
 script:
   - ./node_modules/.bin/gulp lint
+  - ./node_modules/.bin/gulp test
   - ./node_modules/.bin/gulp build
 
 after_success:
