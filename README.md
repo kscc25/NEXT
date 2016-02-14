@@ -5,16 +5,20 @@
 
 NEXT - Agar.io Extension
 
+## Download
+
+- For Google Chrome: http://snsa.github.io/NEXT/next.chrome.user.js
+
 ## Usage
 - Install [Tampermonkey](https://tampermonkey.net/) extension for Google Chrome
-- Install the userscript `userscripts/next.chrome.user.js`
-- Go to [http://agar.io](http://agar.io)
+- Install the userscript
+- Go to http://agar.io
 
 ## Run in development
 - Run `$ npm install`
 - Run `$ jspm install`
 - Run `$ gulp dev`
-- Go to [http://agar.io/dev](http://agar.io/dev)
+- Go to http://agar.io/dev
 
 ## How to contribute
 
