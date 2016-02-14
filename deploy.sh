@@ -13,6 +13,7 @@ rev=$(git rev-parse --short HEAD)
 cd build
 
 sed -i "s/localhost:8080/snsa.github.io\/NEXT/g" index.html
+cp ../userscripts/next.chrome.user.js .
 
 git init
 git config user.name "SNSA Bot"

@@ -7,7 +7,7 @@ NEXT - Agar.io Extension
 
 ## Usage
 - Install [Tampermonkey](https://tampermonkey.net/) extension for Google Chrome
-- Install the userscript `userscripts/next.chrome.js`
+- Install the userscript `userscripts/next.chrome.user.js`
 - Go to [http://agar.io](http://agar.io)
 
 ## Run in development
