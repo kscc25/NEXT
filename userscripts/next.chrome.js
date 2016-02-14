@@ -8,9 +8,19 @@
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
-window.stop(), document.documentElement.innerHTML = null, GM_xmlhttpRequest({
-  method: "GET",
-  url: "http://localhost:8080/",
+window.stop();
+document.documentElement.innerHTML = null;
+
+var urlMaps = {
+  '/': 'http://snsa.github.io/NEXT/',
+  '/dev': 'http://localhost:8080/'
+};
+
+var url = urlMaps[location.pathname] || urlMaps['/'];
+
+GM_xmlhttpRequest({
+  method: 'GET',
+  url: url,
   onload: function(e) {
     document.open(), document.write(e.responseText), document.close()
   }
