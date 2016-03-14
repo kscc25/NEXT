@@ -10,6 +10,7 @@ var runSeq      = require('run-sequence');
 var stylish     = require('jshint-stylish');
 var jscs        = require('gulp-jscs');
 var browserSync = require('browser-sync').create();
+var mocha       = require('gulp-mocha');
 
 gulp.task('css', function () {
   gulp.src(['client/css/layout.css'])
@@ -60,18 +61,23 @@ gulp.task('dev', function () {
 });
 
 gulp.task('jshint', function () {
-  return gulp.src(['./client/js/*.js', './gulpfile.js'])
+  return gulp.src(['./client/js/*.js', './test/*.js', './gulpfile.js'])
     .pipe(jshint())
     .pipe(jshint.reporter(stylish))
     .pipe(jshint.reporter('fail'));
 });
 
 gulp.task('jscs', function () {
-  return gulp.src(['./client/js/*.js', './gulpfile.js'])
+  return gulp.src(['./client/js/*.js', './test/*.js', './gulpfile.js'])
     .pipe(jscs())
     .pipe(jscs.reporter());
 });
 
 gulp.task('lint', function () {
   runSeq('jshint', 'jscs');
+});
+
+gulp.task('test', function () {
+  return gulp.src(['./test/*.js'])
+    .pipe(mocha());
 });
