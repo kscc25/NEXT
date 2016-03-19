@@ -21,34 +21,49 @@ export default class Controller {
     this.nick = constants.DEFAULT_NICKNAME;
     this.autoRespawn = false;
 
+    this.connector.onconnect = (...args) => this.connect(...args);
+    setTimeout(() => this.findParty(), 2000);
+
+    this.initDomEventHandlers();
+    this.initKeyboardEventHandlers();
+    this.initGameEventHandlers();
+  }
+
+  initDomEventHandlers() {
+    dom.playBtn.click(() => {
+      this.client.spawn(dom.nick.val());
+      dom.overlay.hide();
+    });
+
+    dom.region.change(() => {
+      this.client.disconnect();
+      this.connector.findParty(dom.region.val());
+    });
+  }
+
+  initKeyboardEventHandlers() {
     window.addEventListener('keydown', (e) => {
       if (e.keyCode === 27) { // ESC
         this.togglePanel();
       }
     });
+  }
 
-    dom.playBtn.click(() => {
-      client.spawn(dom.nick.val());
-      dom.overlay.hide();
-    });
-
-    dom.region.change(() => {
-      client.disconnect();
-      _this.connector.findParty(dom.region.val());
-    });
-
-    client.on('scoreUpdate', () => {
-      dom.statusBox.html(`Score: ${client.score}`);
-    });
-
-    client.on('reset', () => {
+  initGameEventHandlers() {
+    this.client.on('reset', () => {
       dom.leaderBoard.html('');
       dom.overlay.show();
     });
-    client.on('lostMyBalls', () => {
+
+    this.client.on('lostMyBalls', () => {
       dom.overlay.show();
     });
-    client.on('leaderBoardUpdate', (old, leaders) => {
+
+    this.client.on('scoreUpdate', () => {
+      dom.statusBox.html(`Score: ${this.client.score}`);
+    });
+
+    this.client.on('leaderBoardUpdate', (old, leaders) => {
       dom.leaderBoard.empty();
       leaders.forEach((item, index) => {
         const text = `${index + 1}. ${item[1] || 'An unnamed cell'}`;
@@ -58,9 +73,6 @@ export default class Controller {
         dom.leaderBoard.append(elem);
       });
     });
-
-    this.connector.onconnect = (...args) => this.connect(...args);
-    setTimeout(() => this.findParty(), 2000);
   }
 
   togglePanel() {
