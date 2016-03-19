@@ -49,10 +49,9 @@ export default class Controller {
     });
     client.on('leaderBoardUpdate', (old, leaders) => {
       var leaderBoards = [];
-      leaders.forEach((id, index) => {
-        leaderBoards.push(`${index + 1}. ` + client.balls[id].name || 'An unnamed cell');
+      leaders.forEach((item, index) => {
+        leaderBoards.push(`${index + 1}. ` + item[1] || 'An unnamed cell');
       });
-      console.log(old, leaders);
       dom.leaderBoard.html(leaderBoards.join('<br />'));
     });
 

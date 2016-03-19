@@ -28,7 +28,7 @@ function Client(client_name) {
   this.balls             = {};   //all balls
   this.my_balls          = [];   //IDs of my balls
   this.score             = 0;    //my score
-  this.leaders           = [];   //IDs of leaders in FFA mode
+  this.leaders           = [];   //[ID, name] of leaders in FFA mode
   this.teams_scores      = [];   //scores of teams in Teams mode
   this.auth_token        = '';   //auth token. Check README.md how to get it
   this.auth_provider     = 1;    //auth provider. 1 = facebook, 2 = google
@@ -395,8 +395,7 @@ Client.prototype = {
           if (char === 0) break;
           name += String.fromCharCode(char);
         }
-
-        users.push(id);
+        users.push([id, name]);
         var ball = client.balls[id] || new Ball(client, id);
         if (name) ball.setName(name);
         ball.update();
@@ -485,7 +484,7 @@ Client.prototype = {
       if (client.debug >= 1)
           client.log(client.balls[client.leaders[0]] + ' WON THE GAME! Server going for restart');
 
-      client.emitEvent('winner', client.leaders[0]);
+      client.emitEvent('winner', client.leaders[0][0]);
     },
   },
 
