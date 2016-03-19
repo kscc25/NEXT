@@ -1,10 +1,11 @@
 'use strict';
 
-const Dat = require('dat-gui');
-const Connector = require('./connector');
-const constants = require('./constants');
+import Dat from 'dat-gui';
+import Connector from './connector';
+import constants from './constants';
+import AgarioClient from './agario-client/client';
 
-class Controller {
+export default class Controller {
   constructor(client) {
     this.client = client;
     this.connector = new Connector();
@@ -124,5 +125,3 @@ class Controller {
     }
   }
 }
-
-module.exports = Controller;

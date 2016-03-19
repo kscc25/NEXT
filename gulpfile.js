@@ -9,6 +9,7 @@ var jshint      = require('gulp-jshint');
 var runSeq      = require('run-sequence');
 var stylish     = require('jshint-stylish');
 var jscs        = require('gulp-jscs');
+var sourcemaps  = require('gulp-sourcemaps');
 var browserSync = require('browser-sync').create();
 var mocha       = require('gulp-mocha');
 
@@ -27,7 +28,9 @@ gulp.task('html', function () {
 
 gulp.task('js', function () {
   gulp.src(['client/js/main.js'])
+    .pipe(sourcemaps.init())
     .pipe(jspm({ selfExecutingBundle: true }))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build/js/'));
 });
 

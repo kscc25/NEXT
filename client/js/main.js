@@ -2,12 +2,12 @@
 
 /* global performance: false */
 
-var PIXI = require('pixi.js');
+import PIXI from 'pixi.js';
 
-var Client = require('heroandtn3/agario-client');
-var Controller = require('./controller');
-var Viewer = require('./viewer');
-var Pointer = require('./pointer');
+import Client from './agario-client/client';
+import Controller from './controller';
+import Viewer from './viewer';
+import Pointer from './pointer';
 
 PIXI.Container.prototype.bringToFront = function () {
   if (this.parent) {
