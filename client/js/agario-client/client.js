@@ -1,7 +1,7 @@
 'use strict';
 
 import EventEmitter from 'events';
-
+import { Buffer } from 'buffer';
 import Packet from './Packet';
 import servers from './servers';
 import Account from './Account';
@@ -44,7 +44,7 @@ Client.prototype = {
     if (this.agent) opt.agent = this.agent;
     if (this.local_address) opt.localAddress = this.local_address;
 
-    this.ws            = new WebSocket(server, null, opt);
+    this.ws            = new WebSocket(server);
     this.ws.binaryType = 'arraybuffer';
     this.ws.onopen     = this.onConnect.bind(this);
     this.ws.onmessage  = this.onMessage.bind(this);
@@ -101,7 +101,7 @@ Client.prototype = {
     this.send(buf);
 
     var i;
-
+    console.log(this.key);
     if (this.key) {
       buf = new Buffer(1 + this.key.length);
       buf.writeUInt8(80, 0);
@@ -141,10 +141,12 @@ Client.prototype = {
 
   onMessage: function (e) {
     var packet    = new Packet(e);
+
     if (!packet.length) {
       return this.onPacketError(packet, new Error('Empty packet received'));
     }
     var packet_id = packet.readUInt8();
+    console.log(packet_id);
     var processor = this.processors[packet_id];
     if (!processor) return this.log('[warning] unknown packet ID(' + packet_id + '): ' + packet.toString());
 
@@ -156,7 +158,7 @@ Client.prototype = {
     this.emitEvent('message', packet);
 
     try {
-      processor(this, packet);
+      processor.call(this, this, packet);
     }catch (err) {
       this.onPacketError(packet, err);
     }
@@ -520,9 +522,7 @@ Client.prototype = {
     try {
       this.emit.apply(this, args);
     } catch (e) {
-      process.nextTick(function () {
-        throw e;
-      });
+      throw e;
     }
   },
 

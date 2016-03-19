@@ -27,6 +27,7 @@
   },
   "jspm": {
     "dependencies": {
+      "buffer": "github:jspm/nodelibs-buffer@^0.1.0",
       "dat-gui": "npm:dat-gui@0.5.0",
       "events": "npm:events@1.1.0",
       "http": "github:jspm/nodelibs-http@1.7.1",

@@ -16,6 +16,7 @@ System.config({
   map: {
     "babel": "npm:babel-core@5.8.35",
     "babel-runtime": "npm:babel-runtime@5.8.35",
+    "buffer": "github:jspm/nodelibs-buffer@0.1.0",
     "core-js": "npm:core-js@1.2.6",
     "dat-gui": "npm:dat-gui@0.5.0",
     "events": "npm:events@1.1.0",

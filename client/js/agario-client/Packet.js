@@ -1,5 +1,7 @@
 'use strict';
 
+import { Buffer } from 'buffer';
+
 export default class Packet {
 
   constructor(e) {
