@@ -19,5 +19,5 @@ export default {
   nick: nick,
   playBtn: playBtn,
   region: region,
-  gameMode: gameMode
+  gameMode: gameMode,
 };

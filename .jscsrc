@@ -3,5 +3,6 @@
   "esnext": true,
   "requirePaddingNewLinesAfterBlocks": false,
   "disallowMultipleVarDecl": false,
-  "requireCamelCaseOrUpperCaseIdentifiers": { "ignoreProperties": true }
+  "requireCamelCaseOrUpperCaseIdentifiers": { "ignoreProperties": true },
+  "requireDollarBeforejQueryAssignment": false
 }
