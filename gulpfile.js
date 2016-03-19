@@ -14,20 +14,20 @@ var browserSync = require('browser-sync').create();
 var mocha       = require('gulp-mocha');
 
 gulp.task('css', function () {
-  gulp.src(['client/css/layout.css'])
+  return gulp.src(['client/css/layout.css'])
     .pipe(cssMin())
     .pipe(rename({ suffix: '.bundle' }))
     .pipe(gulp.dest('build/css/'));
 });
 
 gulp.task('html', function () {
-  gulp.src(['client/index.html'])
+  return gulp.src(['client/index.html'])
     .pipe(htmlMin({ collapseWhitespace: true }))
     .pipe(gulp.dest('build/'));
 });
 
 gulp.task('js', function () {
-  gulp.src(['client/js/main.js'])
+  return gulp.src(['client/js/main.js'])
     .pipe(sourcemaps.init())
     .pipe(jspm({ selfExecutingBundle: true }))
     .pipe(sourcemaps.write('.'))
@@ -49,8 +49,8 @@ gulp.task('server', function () {
   });
 });
 
-gulp.task('build', function () {
-  runSeq(['css', 'html', 'js']);
+gulp.task('build', function (callback) {
+  return runSeq(['css', 'html', 'js'], callback);
 });
 
 gulp.task('watch', function () {
@@ -73,14 +73,19 @@ gulp.task('jshint', function () {
 gulp.task('jscs', function () {
   return gulp.src(['./client/js/*.js', './test/*.js', './gulpfile.js'])
     .pipe(jscs())
-    .pipe(jscs.reporter());
+    .pipe(jscs.reporter())
+    .pipe(jscs.reporter('fail'));
 });
 
-gulp.task('lint', function () {
-  runSeq('jshint', 'jscs');
+gulp.task('lint', function (callback) {
+  return runSeq('jshint', 'jscs', callback);
 });
 
 gulp.task('test', function () {
   return gulp.src(['./test/*.js'])
     .pipe(mocha());
+});
+
+gulp.task('default', function () {
+  runSeq('lint', 'test', 'build');
 });

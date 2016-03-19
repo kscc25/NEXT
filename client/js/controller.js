@@ -1,6 +1,5 @@
 'use strict';
 
-import Dat from 'dat-gui';
 import Connector from './connector';
 import constants from './constants';
 import AgarioClient from './agario-client/client';
@@ -36,7 +35,6 @@ export default class Controller {
       client.disconnect();
       _this.connector.findParty(dom.region.val());
     });
-
 
     client.on('scoreUpdate', () => {
       dom.statusBox.html(`Score: ${client.score}`);
