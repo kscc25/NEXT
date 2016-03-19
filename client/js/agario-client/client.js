@@ -97,11 +97,10 @@ Client.prototype = {
 
     buf = new Buffer(5);
     buf.writeUInt8(255, 0);
-    buf.writeUInt32LE(2200049715, 1);
+    buf.writeUInt32LE(154669603, 1);
     this.send(buf);
 
     var i;
-    console.log(this.key);
     if (this.key) {
       buf = new Buffer(1 + this.key.length);
       buf.writeUInt8(80, 0);
@@ -141,12 +140,10 @@ Client.prototype = {
 
   onMessage: function (e) {
     var packet    = new Packet(e);
-
     if (!packet.length) {
       return this.onPacketError(packet, new Error('Empty packet received'));
     }
     var packet_id = packet.readUInt8();
-    console.log(packet_id);
     var processor = this.processors[packet_id];
     if (!processor) return this.log('[warning] unknown packet ID(' + packet_id + '): ' + packet.toString());
 
