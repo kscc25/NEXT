@@ -4,10 +4,81 @@
     <base href="http://localhost:8080/" target="_blank" />
     <meta charset="utf-8">
     <title>NEXT</title>
+    <link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/layout.bundle.css">
   </head>
   <body>
     <div id="viewer"></div>
+
+    <div id="leaderboard">
+      <h4><a href="https://github.com/SNSA/NEXT" target="_blank">NEXT</a></h4>
+      <div></div>
+    </div>
+    <div id="status-box">Score: 0</div>
+    <div class="overlay">
+      <div class="main-panel container">
+        <h4>NEXT <small>by SNSA</small></h4>
+        <hr />
+        <form class="form-horizontal">
+          <div class="form-group form-group-sm">
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="nick" placeholder="Nick">
+            </div>
+            <div class="col-sm-4">
+              <button type="button" class="btn btn-sm btn-block btn-success" id="playBtn">PLAY</button>
+            </div>
+          </div>
+        </form>
+        <form class="form-horizontal">
+          <div class="form-group form-group-sm">
+            <div class="col-sm-4">
+              <input type="text" class="form-control" id="token" placeholder="PARTY CODE">
+            </div>
+            <div class="col-sm-4">
+              <button type="button" class="btn btn-sm btn-block btn-primary">JOIN</button>
+            </div>
+            <div class="col-sm-4">
+              <button type="button" class="btn btn-sm btn-block btn-info">CREATE</button>
+            </div>
+          </div>
+          <div class="form-group form-group-sm">
+            <div class="col-sm-4">
+              <button type="button" class="btn btn-sm btn-block btn-info">SERVER LIST</button>
+            </div>
+            <div class="col-sm-4">
+              <button type="button" class="btn btn-sm btn-block btn-danger">LOGIN</button>
+            </div>
+            <div class="col-sm-4">
+              <button type="button" class="btn btn-sm btn-block btn-warning">SPECTATE</button>
+            </div>
+          </div>
+          <div class="form-group form-group-sm">
+            <div class="col-sm-8">
+              <select class="form-control" id="region">
+                <option selected disabled value="" data-itr="region_select"> -- Select a Region -- </option>
+                <option value="US-Atlanta" data-itr="region_north_america">North America</option>
+                <option value="BR-Brazil" data-itr="region_south_america">South America</option>
+                <option value="EU-London" data-itr="region_europe">Europe</option>
+                <option value="RU-Russia" data-itr="region_russia">Russia</option>
+                <option value="TK-Turkey" data-itr="region_turkey">Turkey</option>
+                <option value="JP-Tokyo" data-itr="region_east_asia">East Asia</option>
+                <option value="CN-China" data-itr="region_china">China</option>
+                <option value="SG-Singapore" data-itr="region_oceania">Oceania</option>
+              </select>
+            </div>
+            <div class="col-sm-4">
+              <select class="form-control" id="gameMode">
+                <option value="" data-itr="gamemode_ffa">FFA</option>
+                <option value=":teams" data-itr="gamemode_teams">TEAM</option>
+                <option value=":experimental" data-itr="gamemode_experimental">EXP</option>
+                <option value=":party" data-itr="party">PARTY</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script src="js/main.bundle.js"></script>
   </body>
 </html>
