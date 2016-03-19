@@ -27,12 +27,14 @@
   },
   "jspm": {
     "dependencies": {
+      "bootstrap": "github:twbs/bootstrap@3.3.6",
       "buffer": "github:jspm/nodelibs-buffer@^0.1.0",
-      "dat-gui": "npm:dat-gui@0.5.0",
+      "css": "github:systemjs/plugin-css@0.1.20",
       "events": "npm:events@1.1.0",
       "http": "github:jspm/nodelibs-http@1.7.1",
       "https": "github:jspm/nodelibs-https@0.1.0",
-      "pixi.js": "npm:pixi.js@3.0.9",
+      "jquery": "npm:jquery@2.2.2",
+      "pixi.js": "npm:pixi.js@^3.0.10",
       "stats.js": "npm:stats.js@0.0.14-master"
     },
     "devDependencies": {

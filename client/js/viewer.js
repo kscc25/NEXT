@@ -45,6 +45,7 @@ class Viewer extends EventEmitter {
     this.getSize();
     this.renderer = PIXI.autoDetectRenderer(this.width, this.height, {
       antialias: true,
+      backgroundColor: 0x111111,
     });
     this.container.appendChild(this.renderer.view);
   }
