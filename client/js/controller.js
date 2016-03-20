@@ -4,6 +4,7 @@ import Connector from './connector';
 import constants from './constants';
 import AgarioClient from './agario-client/client';
 import dom from './dom';
+import $ from 'jquery';
 import * as bootstrap from 'bootstrap';
 
 export default class Controller {
@@ -48,11 +49,14 @@ export default class Controller {
       dom.overlay.show();
     });
     client.on('leaderBoardUpdate', (old, leaders) => {
-      var leaderBoards = [];
+      dom.leaderBoard.empty();
       leaders.forEach((item, index) => {
-        leaderBoards.push(`${index + 1}. ` + item[1] || 'An unnamed cell');
+        const text = `${index + 1}. ${item[1] || 'An unnamed cell'}`;
+        const elem = $('<div/>').text(text);
+        if (item[0])
+          elem.addClass('me');
+        dom.leaderBoard.append(elem);
       });
-      dom.leaderBoard.html(leaderBoards.join('<br />'));
     });
 
     this.connector.onconnect = (...args) => this.connect(...args);
