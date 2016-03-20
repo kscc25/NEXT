@@ -1,6 +1,5 @@
 'use strict';
 
-import Connector from './connector';
 import constants from './constants';
 import AgarioClient from './agario-client/client';
 import dom from './dom';
@@ -9,9 +8,7 @@ import * as bootstrap from 'bootstrap';
 
 export default class Controller {
   constructor(client) {
-    const _this = this;
     this.client = client;
-    this.connector = new Connector();
 
     this.server = {
       region: 'EU-London',
@@ -21,34 +18,52 @@ export default class Controller {
     this.nick = constants.DEFAULT_NICKNAME;
     this.autoRespawn = false;
 
+    setTimeout(() => {
+      console.log('creating room');
+      this.createRoom();
+    }, 2000);
+
+    this.initDomEventHandlers();
+    this.initKeyboardEventHandlers();
+    this.initGameEventHandlers();
+  }
+
+  initDomEventHandlers() {
+    dom.playBtn.click(() => {
+      this.client.spawn(dom.nick.val());
+      dom.overlay.hide();
+    });
+
+    dom.joinBtn.click(this.joinRoom.bind(this));
+    dom.createBtn.click(this.createRoom.bind(this));
+
+    dom.region.change(this.createRoom.bind(this));
+    dom.gameMode.change(this.createRoom.bind(this));
+  }
+
+  initKeyboardEventHandlers() {
     window.addEventListener('keydown', (e) => {
       if (e.keyCode === 27) { // ESC
         this.togglePanel();
       }
     });
+  }
 
-    dom.playBtn.click(() => {
-      client.spawn(dom.nick.val());
-      dom.overlay.hide();
-    });
-
-    dom.region.change(() => {
-      client.disconnect();
-      _this.connector.findParty(dom.region.val());
-    });
-
-    client.on('scoreUpdate', () => {
-      dom.statusBox.html(`Score: ${client.score}`);
-    });
-
-    client.on('reset', () => {
+  initGameEventHandlers() {
+    this.client.on('reset', () => {
       dom.leaderBoard.html('');
       dom.overlay.show();
     });
-    client.on('lostMyBalls', () => {
+
+    this.client.on('lostMyBalls', () => {
       dom.overlay.show();
     });
-    client.on('leaderBoardUpdate', (old, leaders) => {
+
+    this.client.on('scoreUpdate', () => {
+      dom.statusBox.html(`Score: ${this.client.score}`);
+    });
+
+    this.client.on('leaderBoardUpdate', (old, leaders) => {
       dom.leaderBoard.empty();
       leaders.forEach((item, index) => {
         const text = `${index + 1}. ${item[1] || 'An unnamed cell'}`;
@@ -58,29 +73,10 @@ export default class Controller {
         dom.leaderBoard.append(elem);
       });
     });
-
-    this.connector.onconnect = (...args) => this.connect(...args);
-    setTimeout(() => this.findParty(), 2000);
   }
 
   togglePanel() {
     dom.overlay.toggle();
-  }
-
-  findFfa() {
-    this.connector.findFfa(this.server.region);
-  }
-
-  findParty() {
-    this.connector.findParty(this.server.region);
-  }
-
-  connectParty() {
-    this.connector.connectParty(this.server.token);
-  }
-
-  directConnect() {
-    this.connector.directConnect(this.server.ws, this.server.token);
   }
 
   disconnect() {
@@ -91,6 +87,66 @@ export default class Controller {
     this.server.ws = ws;
     this.server.token = token;
     this.client.connect(`ws://${ws}`, token);
+  }
+
+  connectHandler(err, ip, token) {
+    if (err) {
+      throw err;
+    } else {
+      this.disconnect();
+      this.connect(ip, token);
+      if (token.length === 5) {
+        dom.token.val(token);
+        dom.gameMode.val(':party');
+      } else {
+        dom.token.val('');
+      }
+    }
+  }
+
+  createRoom() {
+    var gameMode = dom.gameMode.val();
+    switch (gameMode) {
+      case '':
+        this.createFfaRoom();
+        break;
+      case ':teams':
+        this.createTeamRoom();
+        break;
+      case ':experimental':
+        this.createExperimentalRoom();
+        break;
+      case ':party':
+        this.createPartyRoom();
+        break;
+      default:
+        this.createPartyRoom();
+    }
+  }
+
+  joinRoom() {
+    var token = dom.token.val();
+    this.joinPartyRoom(token);
+  }
+
+  createFfaRoom() {
+    AgarioClient.Server.createFfaRoom(dom.region.val(), this.connectHandler.bind(this));
+  }
+
+  createTeamRoom() {
+    AgarioClient.Server.createTeamRoom(dom.region.val(), this.connectHandler.bind(this));
+  }
+
+  createExperimentalRoom() {
+    AgarioClient.Server.createExperimentalRoom(dom.region.val(), this.connectHandler.bind(this));
+  }
+
+  createPartyRoom() {
+    AgarioClient.Server.createPartyRoom(dom.region.val(), this.connectHandler.bind(this));
+  }
+
+  joinPartyRoom(token) {
+    AgarioClient.Server.joinPartyRoom(token, this.connectHandler.bind(this));
   }
 
   spawn() {

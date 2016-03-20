@@ -35,28 +35,27 @@
               <input type="text" class="form-control" id="token" placeholder="PARTY CODE">
             </div>
             <div class="col-sm-4">
-              <button type="button" class="btn btn-sm btn-block btn-primary">JOIN</button>
+              <button type="button" id="joinBtn" class="btn btn-sm btn-block btn-primary">JOIN</button>
             </div>
             <div class="col-sm-4">
-              <button type="button" class="btn btn-sm btn-block btn-info">CREATE</button>
+              <button type="button" id="createBtn" class="btn btn-sm btn-block btn-info">CREATE</button>
             </div>
           </div>
           <div class="form-group form-group-sm">
             <div class="col-sm-4">
-              <button type="button" class="btn btn-sm btn-block btn-info">SERVER LIST</button>
+              <button type="button" class="btn btn-sm btn-block btn-info" disabled="disabled">SERVER LIST</button>
             </div>
             <div class="col-sm-4">
-              <button type="button" class="btn btn-sm btn-block btn-danger">LOGIN</button>
+              <button type="button" class="btn btn-sm btn-block btn-danger" disabled="disabled">LOGIN</button>
             </div>
             <div class="col-sm-4">
-              <button type="button" class="btn btn-sm btn-block btn-warning">SPECTATE</button>
+              <button type="button" class="btn btn-sm btn-block btn-warning" disabled="disabled">SPECTATE</button>
             </div>
           </div>
           <div class="form-group form-group-sm">
             <div class="col-sm-8">
               <select class="form-control" id="region">
-                <option selected disabled value="" data-itr="region_select"> -- Select a Region -- </option>
-                <option value="US-Atlanta" data-itr="region_north_america">North America</option>
+                <option selected value="US-Atlanta" data-itr="region_north_america">North America</option>
                 <option value="BR-Brazil" data-itr="region_south_america">South America</option>
                 <option value="EU-London" data-itr="region_europe">Europe</option>
                 <option value="RU-Russia" data-itr="region_russia">Russia</option>

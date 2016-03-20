@@ -3,7 +3,7 @@
 import EventEmitter from 'events';
 import { Buffer } from 'buffer';
 import Packet from './Packet';
-import servers from './servers';
+import Server from './Server';
 import Account from './Account';
 import Ball from './Ball';
 
@@ -658,7 +658,7 @@ for (var key in EventEmitter.prototype) {
   Client.prototype[key] = Ball.prototype[key] = EventEmitter.prototype[key];
 }
 
-Client.servers = servers;
+Client.Server = new Server();
 Client.Packet  = Packet;
 Client.Account = Account;
 Client.Ball    = Ball;
