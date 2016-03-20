@@ -61,15 +61,24 @@ canvas {
   top: 10px;
   right: 10px;
   width: 200px;
-  height: 280px;
-
+  padding: 5px;
+  text-align: center;
 }
 
-#leaderboard {
-  text-align: center;
+#leaderboard div div {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#leaderboard h4 {
+  margin: 3px;
 }
 
 #leaderboard h4 a {
   text-decoration: none;
   color: #FFC107 !important;
+}
+
+#leaderboard div div.me {
+  color: #FFC107;
 }
