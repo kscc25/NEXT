@@ -8,8 +8,11 @@ const leaderBoard = $('#leaderboard div');
 const statusBox = $('#status-box');
 const nick = mainPanel.find('input#nick');
 const playBtn = mainPanel.find('button#playBtn');
+const joinBtn = mainPanel.find('button#joinBtn');
+const createBtn = mainPanel.find('button#createBtn');
 const region = mainPanel.find('#region');
 const gameMode = mainPanel.find('#gameMode');
+const token = mainPanel.find('#token');
 
 export default {
   overlay: overlay,
@@ -20,4 +23,7 @@ export default {
   playBtn: playBtn,
   region: region,
   gameMode: gameMode,
+  token: token,
+  joinBtn: joinBtn,
+  createBtn: createBtn,
 };

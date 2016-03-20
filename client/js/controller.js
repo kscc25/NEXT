@@ -1,6 +1,5 @@
 'use strict';
 
-import Connector from './connector';
 import constants from './constants';
 import AgarioClient from './agario-client/client';
 import dom from './dom';
@@ -9,9 +8,7 @@ import * as bootstrap from 'bootstrap';
 
 export default class Controller {
   constructor(client) {
-    const _this = this;
     this.client = client;
-    this.connector = new Connector();
 
     this.server = {
       region: 'EU-London',
@@ -21,8 +18,10 @@ export default class Controller {
     this.nick = constants.DEFAULT_NICKNAME;
     this.autoRespawn = false;
 
-    this.connector.onconnect = (...args) => this.connect(...args);
-    setTimeout(() => this.findParty(), 2000);
+    setTimeout(() => {
+      console.log('creating room');
+      this.createRoom();
+    }, 2000);
 
     this.initDomEventHandlers();
     this.initKeyboardEventHandlers();
@@ -35,10 +34,11 @@ export default class Controller {
       dom.overlay.hide();
     });
 
-    dom.region.change(() => {
-      this.client.disconnect();
-      this.connector.findParty(dom.region.val());
-    });
+    dom.joinBtn.click(this.joinRoom.bind(this));
+    dom.createBtn.click(this.createRoom.bind(this));
+
+    dom.region.change(this.createRoom.bind(this));
+    dom.gameMode.change(this.createRoom.bind(this));
   }
 
   initKeyboardEventHandlers() {
@@ -79,22 +79,6 @@ export default class Controller {
     dom.overlay.toggle();
   }
 
-  findFfa() {
-    this.connector.findFfa(this.server.region);
-  }
-
-  findParty() {
-    this.connector.findParty(this.server.region);
-  }
-
-  connectParty() {
-    this.connector.connectParty(this.server.token);
-  }
-
-  directConnect() {
-    this.connector.directConnect(this.server.ws, this.server.token);
-  }
-
   disconnect() {
     this.client.disconnect();
   }
@@ -103,6 +87,66 @@ export default class Controller {
     this.server.ws = ws;
     this.server.token = token;
     this.client.connect(`ws://${ws}`, token);
+  }
+
+  connectHandler(err, ip, token) {
+    if (err) {
+      throw err;
+    } else {
+      this.disconnect();
+      this.connect(ip, token);
+      if (token.length === 5) {
+        dom.token.val(token);
+        dom.gameMode.val(':party');
+      } else {
+        dom.token.val('');
+      }
+    }
+  }
+
+  createRoom() {
+    var gameMode = dom.gameMode.val();
+    switch (gameMode) {
+      case '':
+        this.createFfaRoom();
+        break;
+      case ':teams':
+        this.createTeamRoom();
+        break;
+      case ':experimental':
+        this.createExperimentalRoom();
+        break;
+      case ':party':
+        this.createPartyRoom();
+        break;
+      default:
+        this.createPartyRoom();
+    }
+  }
+
+  joinRoom() {
+    var token = dom.token.val();
+    this.joinPartyRoom(token);
+  }
+
+  createFfaRoom() {
+    AgarioClient.Server.createFfaRoom(dom.region.val(), this.connectHandler.bind(this));
+  }
+
+  createTeamRoom() {
+    AgarioClient.Server.createTeamRoom(dom.region.val(), this.connectHandler.bind(this));
+  }
+
+  createExperimentalRoom() {
+    AgarioClient.Server.createExperimentalRoom(dom.region.val(), this.connectHandler.bind(this));
+  }
+
+  createPartyRoom() {
+    AgarioClient.Server.createPartyRoom(dom.region.val(), this.connectHandler.bind(this));
+  }
+
+  joinPartyRoom(token) {
+    AgarioClient.Server.joinPartyRoom(token, this.connectHandler.bind(this));
   }
 
   spawn() {
