@@ -3,7 +3,6 @@
 import constants from './constants';
 import AgarioClient from './agario-client/client';
 import dom from './dom';
-import $ from 'jquery';
 import * as bootstrap from 'bootstrap';
 
 export default class Controller {
@@ -64,14 +63,18 @@ export default class Controller {
     });
 
     this.client.on('leaderBoardUpdate', (old, leaders) => {
-      dom.leaderBoard.empty();
+      let leaderBoards = [];
       leaders.forEach((item, index) => {
-        const text = `${index + 1}. ${item[1] || 'An unnamed cell'}`;
-        const elem = $('<div/>').text(text);
-        if (item[0])
-          elem.addClass('me');
-        dom.leaderBoard.append(elem);
+        let text = `${index + 1}. ${item[1] || 'An unnamed cell'}`;
+        if (item[0]) { // current user
+          text = `<div class="me">${text}</div>`;
+        } else {
+          text = `<div>${text}</div>`;
+        }
+        leaderBoards.push(text);
       });
+
+      dom.leaderBoard.html(leaderBoards.join('\n'));
     });
   }
 
