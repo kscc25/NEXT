@@ -19,18 +19,21 @@ class Viewer extends EventEmitter {
     this.addRenderer();
     this.addStats();
     this.mapSize = MapSize.default();
-    client.once('mapSizeLoad', (minX, minY, maxX, maxY) => {
-      this.mapSize = new MapSize(minX, minY, maxX, maxY);
-      this.gameWidth = maxX;
-      this.gameHeight = maxY;
+    client.once('connected', () => {
       this.zoom = 0;
       this.initStage();
       this.addListners();
-      this.addBorders();
       this.animate();
       this.homeview = true;
       client.once('myNewBall', () => this.homeview = false);
       this.emit('launched');
+    });
+    client.on('mapSizeLoad', (minX, minY, maxX, maxY) => {
+      const mapSize = new MapSize(minX, minY, maxX, maxY);
+      if (mapSize.isLegit()) {
+        this.mapSize = mapSize;
+        this.updateBorders();
+      }
     });
     window.addEventListener('resize', () => this.updateSize());
     window.addEventListener('wheel', e => this.modifyZoom(e.deltaY));
@@ -86,12 +89,15 @@ class Viewer extends EventEmitter {
     this.client.on('ballDestroy', id => delete this.client.balls[id]);
   }
 
-  addBorders() {
-    this.borders = new PIXI.Graphics();
+  updateBorders() {
+    if (!this.borders) {
+      this.borders = new PIXI.Graphics();
+      this.stage.addChild(this.borders);
+    }
+    this.borders.clear();
     this.borders.lineStyle(5, 0xFF3300, 1);
     const s = this.mapSize;
     this.borders.drawRect(s.minX, s.minY, s.width(), s.height());
-    this.stage.addChild(this.borders);
   }
 
   addStats() {
