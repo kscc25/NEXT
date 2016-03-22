@@ -48,7 +48,7 @@ class BallView {
   appear() {
     this.x.write(this.ball.x);
     this.y.write(this.ball.y);
-    this.s.set(this.ball.size, 100);
+    this.s.write(this.ball.size);
     this.shape();
     this.setName();
     this.setMass();
