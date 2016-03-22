@@ -40,7 +40,7 @@ class BallView {
       this.y.set(newY, 120);
     });
     this.ball.on('resize', (oldSize, newSize) => {
-      this.s.set(newSize, 100);
+      this.s.set(newSize, 200);
       this.main.zSort(newSize);
     });
   }
@@ -57,8 +57,8 @@ class BallView {
   }
 
   disappear() {
-    this.s.set(0, 100);
-    setTimeout(() => this.main.stage.removeChild(this.container), 100);
+    this.s.write(0);
+    this.main.stage.removeChild(this.container);
   }
 
   shape() {
