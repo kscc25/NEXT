@@ -134,8 +134,8 @@ class Viewer extends EventEmitter {
       p += ball.size;
     }
     if (p > 0) { // if we have visible ball(s)
-      this.cam.x.set(x / p, 100);
-      this.cam.y.set(y / p, 100);
+      this.cam.x.set(x / p, 120);
+      this.cam.y.set(y / p, 120);
       this.cam.s.set(Math.pow(Math.min(64 / p, 1), 0.4) * this.defaultScale(), 500);
     } else if (this.homeview) {
       this.cam.s.write(this.defaultScale());

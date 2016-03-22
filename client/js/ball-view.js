@@ -36,8 +36,8 @@ class BallView {
     });
     this.ball.on('disappear', () => this.disappear());
     this.ball.on('move', (oldX, oldY, newX, newY) => {
-      this.x.set(newX, 100);
-      this.y.set(newY, 100);
+      this.x.set(newX, 120);
+      this.y.set(newY, 120);
     });
     this.ball.on('resize', (oldSize, newSize) => {
       this.s.set(newSize, 100);
