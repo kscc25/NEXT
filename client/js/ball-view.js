@@ -63,7 +63,7 @@ class BallView {
 
   shape() {
     this.graphic.clear();
-    this.graphic.beginFill(this.ball.virus ? 0x005500 : this.ball.color.replace('#', '0x'), 1);
+    this.graphic.beginFill(this.ball.virus ? 0x33FF33 : this.ball.color.replace('#', '0x'), 1);
     this.graphic.drawCircle(0, 0, 1);
     this.graphic.endFill();
   }
