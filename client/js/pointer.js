@@ -19,6 +19,8 @@ class Pointer {
         this.client.eject();
       } else if (e.keyCode == 32) {
         this.client.split();
+      } else if (e.keyCode == 81) {
+        this.client.spectateModeToggle();
       }
     });
   }

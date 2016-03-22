@@ -36,6 +36,11 @@ export default class Controller {
     dom.joinBtn.click(this.joinRoom.bind(this));
     dom.createBtn.click(this.createRoom.bind(this));
 
+    dom.spectateBtn.click(() => {
+      this.client.spectate();
+      dom.overlay.hide();
+    });
+
     dom.region.change(this.createRoom.bind(this));
     dom.gameMode.change(this.createRoom.bind(this));
   }
@@ -90,6 +95,10 @@ export default class Controller {
     this.server.ws = ws;
     this.server.token = token;
     this.client.connect(`ws://${ws}`, token);
+  }
+
+  spectate() {
+    this.client.spectate();
   }
 
   connectHandler(err, ip, token) {

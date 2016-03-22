@@ -9,6 +9,7 @@ const statusBox = $('#status-box');
 const nick = mainPanel.find('input#nick');
 const playBtn = mainPanel.find('button#playBtn');
 const joinBtn = mainPanel.find('button#joinBtn');
+const spectateBtn = mainPanel.find('button#spectateBtn');
 const createBtn = mainPanel.find('button#createBtn');
 const region = mainPanel.find('#region');
 const gameMode = mainPanel.find('#gameMode');
@@ -26,4 +27,5 @@ export default {
   token: token,
   joinBtn: joinBtn,
   createBtn: createBtn,
+  spectateBtn: spectateBtn,
 };
