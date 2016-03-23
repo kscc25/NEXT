@@ -8,6 +8,7 @@ class Pointer {
       x: 0,
       y: 0,
     };
+    this.keysPressed = {};
     this.viewer.once('launched', () => {
       this.viewer.stage.interactive = true;
       this.viewer.stage.on('mousemove', e => this.pointermove(e));
@@ -15,11 +16,16 @@ class Pointer {
       this.viewer.on('animate', e => this.move());
     });
     window.addEventListener('keydown', (e) => {
+      if (this.keysPressed[e.keyCode]) return;
+      this.keysPressed[e.keyCode] = true;
       if (e.keyCode == 87) {
         this.client.eject();
       } else if (e.keyCode == 32) {
         this.client.split();
       }
+    });
+    window.addEventListener('keyup', (e) => {
+      this.keysPressed[e.keyCode] = false;
     });
   }
 
