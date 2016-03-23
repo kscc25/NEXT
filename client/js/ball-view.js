@@ -63,7 +63,7 @@ class BallView {
 
   shape() {
     this.graphic.clear();
-    this.graphic.beginFill(this.ball.virus ? 0x005500 : this.ball.color.replace('#', '0x'), 1);
+    this.graphic.beginFill(this.ball.virus ? 0x33FF33 : this.ball.color.replace('#', '0x'), 1);
     this.graphic.drawCircle(0, 0, 1);
     this.graphic.endFill();
   }
@@ -72,10 +72,10 @@ class BallView {
     if (this.ball.name) {
       if (!this.name) {
         this.name = new PIXI.Text(this.ball.name, {
-          font: 'bold 20pt Arial',
+          font: 'bold 20pt Ubuntu',
           fill: 0xFFFFFF,
           stroke: 0x000000,
-          strokeThickness: 5,
+          strokeThickness: 2,
         });
         this.ball.on('rename', () => this.updateName());
       }
@@ -101,10 +101,10 @@ class BallView {
     if (this.ball.mine) {
       if (!this.mass) {
         this.mass = new PIXI.Text(this.ball.mass, {
-          font: 'bold 20pt Arial',
+          font: 'bold 20pt Ubuntu',
           fill: 0xFFFFFF,
           stroke: 0x000000,
-          strokeThickness: 5,
+          strokeThickness: 2,
         });
         this.ball.on('resize', () => { this.updateMass(); });
       }
