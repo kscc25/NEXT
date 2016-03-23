@@ -35,6 +35,10 @@ class Viewer extends EventEmitter {
         this.updateBorders();
       }
     });
+    client.on('spectateFieldUpdate', (x, y, zoom) => {
+      this.cam.x.set(x, 120);
+      this.cam.y.set(y, 120);
+    });
     window.addEventListener('resize', () => this.updateSize());
     window.addEventListener('wheel', e => this.modifyZoom(e.deltaY));
   }
