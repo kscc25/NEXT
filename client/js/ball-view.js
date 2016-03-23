@@ -100,7 +100,7 @@ class BallView {
   setMass() {
     if (this.ball.mine) {
       if (!this.mass) {
-        this.mass = new PIXI.Text(this.ball.size, {
+        this.mass = new PIXI.Text(this.ball.mass, {
           font: 'bold 20pt Arial',
           fill: 0xFFFFFF,
           stroke: 0x000000,
@@ -120,7 +120,7 @@ class BallView {
   }
 
   updateMass() {
-    this.mass.text = this.ball.size;
+    this.mass.text = this.ball.mass;
     this.mass.resolution = 10;
     this.mass.scale.x = this.mass.scale.y *= 0.5 / this.mass.width;
     this.mass.position.x = -this.mass.width / 2;
