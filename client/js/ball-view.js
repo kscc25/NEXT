@@ -40,7 +40,7 @@ class BallView {
       this.y.set(newY, 120);
     });
     this.ball.on('resize', (oldSize, newSize) => {
-      this.s.set(newSize, 200);
+      this.s.set(newSize, 120);
       this.main.zSort(newSize);
     });
   }
