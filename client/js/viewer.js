@@ -78,9 +78,6 @@ class Viewer extends EventEmitter {
       s: new AnimatedValue(this.defaultScale()),
       z: new AnimatedValue(this.zoom),
     };
-    this.d = {};
-    this.dg = new PIXI.Graphics();
-    this.stage.addChild(this.dg);
   }
 
   addListners() {
