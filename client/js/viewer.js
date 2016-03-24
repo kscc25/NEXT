@@ -9,10 +9,9 @@ const Stats = require('stats.js');
 const EventEmitter = require('events').EventEmitter;
 
 class Viewer extends EventEmitter {
-  constructor(client, container) {
+  constructor(client) {
     super();
     this.client = client;
-    this.container = container;
 
     this.balls = {};
 
@@ -54,7 +53,7 @@ class Viewer extends EventEmitter {
       antialias: true,
       backgroundColor: 0x111111,
     });
-    this.container.appendChild(this.renderer.view);
+    document.getElementById('viewer').appendChild(this.renderer.view);
   }
 
   updateSize() {

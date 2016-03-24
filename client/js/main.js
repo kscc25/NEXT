@@ -20,7 +20,7 @@ PIXI.Container.prototype.bringToFront = function () {
 var d = {}; // DEBUG Allow access from console
 window.onload = function () {
   d.client = new Client('worker');
-  d.viewer = new Viewer(d.client, document.getElementById('viewer'));
+  d.viewer = new Viewer(d.client);
   d.controller = new Controller(d.client);
   d.pointer = new Pointer(d.viewer);
 };
