@@ -50,4 +50,23 @@ export default class Server {
     });
   }
 
+  fetchInfo(callback) {
+    let req = new XMLHttpRequest();
+
+    req.open('GET', 'http://m.agar.io/info');
+    req.send();
+    req.addEventListener('load', () => {
+      if (req.status == 200) {
+        let json
+        try {
+            json = JSON.parse(req.responseText)
+        } catch (e) {
+            return callback(new Error('Failed to fetch info: invalid JSON'));
+        }
+        return callback(null, json);
+      }
+      return callback(new Error('Failed to fetch info, status code: ' + req.status));
+    });
+  }
+
 }

@@ -12,6 +12,7 @@ const joinBtn = mainPanel.find('button#joinBtn');
 const spectateBtn = mainPanel.find('button#spectateBtn');
 const createBtn = mainPanel.find('button#createBtn');
 const region = mainPanel.find('#region');
+const regionOptions = region.find('option');
 const gameMode = mainPanel.find('#gameMode');
 const token = mainPanel.find('#token');
 
@@ -23,6 +24,7 @@ export default {
   nick: nick,
   playBtn: playBtn,
   region: region,
+  regionOptions: regionOptions,
   gameMode: gameMode,
   token: token,
   joinBtn: joinBtn,

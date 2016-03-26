@@ -25,6 +25,7 @@ export default class Controller {
     this.initDomEventHandlers();
     this.initKeyboardEventHandlers();
     this.initGameEventHandlers();
+    this.updatePlayerNumbers();
   }
 
   initDomEventHandlers() {
@@ -80,6 +81,19 @@ export default class Controller {
       });
 
       dom.leaderBoard.html(leaderBoards.join('\n'));
+    });
+  }
+
+  updatePlayerNumbers() {
+    AgarioClient.Server.fetchInfo((err, info) => {
+      if (err)
+        return err;
+      dom.regionOptions.each((n, elem) => {
+        elem.text = elem.text.split(' (')[0];
+        const numPlayers = (info.regions[elem.value] || {}).numPlayers;
+        if (typeof numPlayers === 'number')
+          elem.text += ` (${numPlayers} players)`;
+      });
     });
   }
 
