@@ -66,7 +66,7 @@ class Viewer extends EventEmitter {
   }
 
   modifyZoom(amount) {
-    this.zoom -= Math.sign(amount) * 0.25;
+    this.zoom -= Math.sign(amount) * 0.15;
     this.zoom = Misc.ensureRange(this.zoom, -5, 1.5);
   }
 
