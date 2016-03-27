@@ -48,7 +48,7 @@ class BallView {
   appear() {
     this.x.write(this.ball.x);
     this.y.write(this.ball.y);
-    this.s.write(this.ball.size);
+    this.size.write(this.ball.size);
     this.initSize = this.ball.size;
     this.shape();
     this.setName();
@@ -129,7 +129,7 @@ class BallView {
   render() {
     this.container.position.x = this.x.get();
     this.container.position.y = this.y.get();
-    this.container.scale.x = this.container.scale.y = this.s.get() / this.initSize;
+    this.container.scale.x = this.container.scale.y = this.size.get() / this.initSize;
   }
 }
 
