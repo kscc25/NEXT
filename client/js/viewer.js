@@ -9,10 +9,9 @@ const Stats = require('stats.js');
 const EventEmitter = require('events').EventEmitter;
 
 class Viewer extends EventEmitter {
-  constructor(client, container) {
+  constructor(client) {
     super();
     this.client = client;
-    this.container = container;
 
     this.balls = {};
 
@@ -54,7 +53,7 @@ class Viewer extends EventEmitter {
       antialias: true,
       backgroundColor: 0x111111,
     });
-    this.container.appendChild(this.renderer.view);
+    document.getElementById('viewer').appendChild(this.renderer.view);
   }
 
   updateSize() {
@@ -67,7 +66,7 @@ class Viewer extends EventEmitter {
   }
 
   modifyZoom(amount) {
-    this.zoom -= Math.sign(amount) * 0.25;
+    this.zoom -= Math.sign(amount) * 0.15;
     this.zoom = Misc.ensureRange(this.zoom, -5, 1.5);
   }
 
@@ -79,9 +78,6 @@ class Viewer extends EventEmitter {
       s: new AnimatedValue(this.defaultScale()),
       z: new AnimatedValue(this.zoom),
     };
-    this.d = {};
-    this.dg = new PIXI.Graphics();
-    this.stage.addChild(this.dg);
   }
 
   addListners() {
@@ -128,30 +124,37 @@ class Viewer extends EventEmitter {
   }
 
   posCamera() {
-    let x, y, p;
-    x = y = p = 0;
-    for (const ballId in this.client.my_balls) {
-      const ball = this.client.balls[this.client.my_balls[ballId]];
+    let sumX, sumY, sumSize;
+    sumX = sumY = sumSize = 0;
+    let myBallIds = this.client.my_balls;
+    let balls = this.client.balls;
+    let visibleBallCount = 0;
+    for (let i = myBallIds.length - 1; i >= 0; --i) {
+      const ball = balls[myBallIds[i]];
       if (!ball.visible) continue;
-      x += ball.x * ball.size;
-      y += ball.y * ball.size;
-      p += ball.size;
+
+      sumX += ball.x;
+      sumY += ball.y;
+      sumSize += ball.size;
+      visibleBallCount += 1;
     }
-    if (p > 0) { // if we have visible ball(s)
-      this.cam.x.set(x / p, 120);
-      this.cam.y.set(y / p, 120);
-      this.cam.s.set(Math.pow(Math.min(64 / p, 1), 0.4) * this.defaultScale(), 500);
+
+    if (sumSize > 0) { // if we have visible ball(s)
+      this.cam.x.set(sumX / visibleBallCount, 120);
+      this.cam.y.set(sumY / visibleBallCount, 120);
+      this.cam.s.set(Math.pow(Math.min(64 / sumSize, 1), 0.4) * this.defaultScale(), 500);
     } else if (this.homeview) {
       this.cam.s.write(this.defaultScale());
     } // else: don't move the camera
-    this.cam.z.set(this.zoom, 100);
+    this.cam.z.set(this.zoom, 120);
   }
 
   render() {
-    for (const ballId in this.client.balls) {
-      const ball = this.balls[ballId];
-      if (ball) {
-        ball.render();
+    let ballIds = Object.keys(this.client.balls);
+    for (let i = ballIds.length - 1; i >= 0; --i) {
+      let ballView = this.balls[ballIds[i]];
+      if (ballView) {
+        ballView.render();
       }
     }
   }
