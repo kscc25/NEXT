@@ -106,8 +106,6 @@ export default class Controller {
   }
 
   connect(ws, token) {
-    this.server.ws = ws;
-    this.server.token = token;
     this.client.connect(`ws://${ws}`, token);
   }
 
