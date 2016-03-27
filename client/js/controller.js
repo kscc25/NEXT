@@ -1,21 +1,13 @@
 'use strict';
 
-import constants from './constants';
 import AgarioClient from './agario-client/client';
 import dom from './dom';
 import * as bootstrap from 'bootstrap';
 
 export default class Controller {
+
   constructor(client) {
     this.client = client;
-
-    this.server = {
-      region: 'EU-London',
-      ws: '127.0.0.1:9158',
-      token: '',
-    };
-    this.nick = constants.DEFAULT_NICKNAME;
-    this.autoRespawn = false;
 
     setTimeout(() => {
       console.log('creating room');
