@@ -25,13 +25,15 @@ class BallView {
           this.y.follow(() => eater.y.get(), 100);
           setTimeout(() => {
             this.disappear();
-            delete this.main.balls[this.ball.id];
+            this.destroy();
           }, 50);
         } else {
           this.disappear();
+          this.destroy();
         }
       } else {
         this.disappear();
+        this.destroy();
       }
     });
     this.ball.on('disappear', () => this.disappear());
@@ -41,8 +43,20 @@ class BallView {
     });
     this.ball.on('resize', (oldSize, newSize) => {
       this.size.set(newSize, 120);
-      this.main.zSort(newSize);
+      this.container.zIndex = newSize;
+      this.main.reSort = true;
     });
+    this.container.zIndex = this.ball.size;
+    this.container.ballId = this.ball.id;
+  }
+
+  destroy() {
+    this.main.stage.removeChild(this.container);
+    this.graphic.destroy();
+    if (this.name) this.name.destroy();
+    if (this.mass) this.mass.destroy();
+    this.container.destroy();
+    delete this.main.balls[this.ball.id];
   }
 
   appear() {
@@ -53,8 +67,8 @@ class BallView {
     this.shape();
     this.setName();
     this.setMass();
-    this.main.zSort(this.ball.size);
     this.main.stage.addChild(this.container);
+    this.main.reSort = true;
   }
 
   disappear() {

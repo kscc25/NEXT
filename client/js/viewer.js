@@ -14,7 +14,7 @@ class Viewer extends EventEmitter {
     this.client = client;
 
     this.balls = {};
-
+    this.reSort = false;
     this.addRenderer();
     this.addStats();
     this.mapSize = MapSize.default();
@@ -92,6 +92,7 @@ class Viewer extends EventEmitter {
   updateBorders() {
     if (!this.borders) {
       this.borders = new PIXI.Graphics();
+      this.borders.zIndex = -1;
       this.stage.addChild(this.borders);
     }
     this.borders.clear();
@@ -109,18 +110,9 @@ class Viewer extends EventEmitter {
     document.body.appendChild(this.stats.domElement);
   }
 
-  zSort(at) {
-    if (!at) {
-      at = 0;
-    }
-    const keys = Object.keys(this.balls);
-    keys.sort((a, b) => this.balls[a].ball.size - this.balls[b].ball.size);
-    for (const keyOffset in keys) {
-      const ball = this.balls[keys[keyOffset]];
-      if (ball.ball.size >= at) {
-        ball.container.bringToFront();
-      }
-    }
+  zSort() {
+    this.stage.children.sort(
+      (a, b) => a.zIndex === b.zIndex ? a.ballId - b.ballId : a.zIndex - b.zIndex);
   }
 
   posCamera() {
@@ -161,6 +153,7 @@ class Viewer extends EventEmitter {
 
   animate() {
     this.stats.begin();
+    if (this.reSort) this.zSort();
     this.render();
     this.posCamera();
     this.stage.scale.x = this.stage.scale.y =
