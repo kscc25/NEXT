@@ -8,10 +8,12 @@ NEXT - Agar.io Extension
 ## Download
 
 - For Google Chrome: http://snsa.github.io/NEXT/next.chrome.user.js
+- For Mozilla Firefox: http://snsa.github.io/NEXT/next.firefox.user.js
 
 ## Usage
 - Install [Tampermonkey](https://tampermonkey.net/) extension for Google Chrome
-- Install the userscript
+or [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) for Firefox
+- Install the corresponding userscript you downloaded above for each browser
 - Go to http://agar.io
 
 ## Run in development
